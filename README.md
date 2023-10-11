@@ -23,46 +23,96 @@ Originally I wanted a dice rolling bot for our board game streams. There's alrea
 
 To register and set up the bot, perform the following steps:
 
-- Go to your developer console, at dev.twitch.tv/console. (log in if you need to).
+- Open your browser that you use for Twitch, and go to https://dev.twitch.tv/console, click Your Console. (log in if you need to).
+
+![Screenshot of the Twitch developer console](/readmescreenshots/devconsole.png)
+
 - Navigate to Applications and click "Register Your Application".
+
+![Screenshot of your Applications view](/readmescreenshots/registeryourapp.png)
+
 - Give your sound bot a name, in this example, I'm calling it the DanielAndMayaSoundBot.
   - ensure that the OAuth Redirect URLs is `http://localhost`.
   - ensure that the Category is Chat Bot.
-- Click Create, this will create the bot.
+  - Click Create, this will create the bot.
+![Screenshot of creating your bot](/readmescreenshots/createthebot.png)
+
 - In Applications, click "Manage" for your newly created bot.
+
+![Screenshot of Management view](/readmescreenshots/clickmanage.png)
+
 - In this view, you'll see two new parts of this app, Client ID and Client Secret (example from mine have been blurred).
   - Your Client ID is like an SSN (Social Security Number) for your bot.
   - Your Client Secret is like a special password (not your Twitch password) that the bot can use to authenticate to Twitch.
-- Click on New Secret to generate a new Client Secret (example from mine have been blurred).
-- Once its generated copy both Client ID and Client Secret to the `Start-TwitchSoundChat.ps1` script.
+  - Click on New Secret to generate a new Client Secret (example from mine have been blurred).
+
+![Screenshot of creating a new Secret](/readmescreenshots/createnewsecret.png)
+
+- Once its generated, both Client ID and Client Secret will appear as below (example from mine have been blurred).
+
+![Screenshot of Client ID and Client Secret](/readmescreenshots/clientidclientsecret.png)
+
 - Copy the Client ID and paste it in the following line 3 of the `Start-TwitchSoundChat.ps1` script. Replace the xxx's with the Client ID:
   - `$clientID     = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"`
+
 - Copy the Client ID and paste it in the following line 8 of the `Start-TwitchSoundChat.ps1` script. Replace the xxx's with the Client ID:
   - `#https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&redirect_uri=http://localhost&scope=chat%3Aread`
+ 
 - Copy the Client Secret and paste it in the following line 4 of the `Start-TwitchSoundChat.ps1` script. Replace the yyy's with the Client Secret:
   - `$clientsecret = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"`
+
 - Enter your channel name on line 7 of the `Start-TwitchSoundChat.ps1` script.
   - `$yourchannelname = "yourchannelname"`
+
 - If necessary, enter in the install location for VLC on line 10 of the `Start-TwitchSoundChat.ps1` script. If you did not change the default install location, you should not need to change this.
+
 - Optionally, if you want the bot to say something when it connects to Twitch chat, uncomment line 126 and change the text to whatever you need.
+
 - This completes the one-time setup process for your new bot.
+
+# Configuring VLC Player for the script (perform once only)
+
+There are two changes you will need to make to VLC Player's preferences:
+
+- Open VLC Player, and go to Tools -> Preferences. (Keyboard shortcut: Ctrl + P).
+- Ensure that "Allow only one instance" is checked.
+  - This ensures that only one VLC player will open when a sound is played by the script. Otherwise a new VLC instance will open every sound, and those probably won't be targeted by your streaming software.
+
+![Screenshot of "Only one instance checked"](/readmescreenshots/allowonlyoneinstance.png)
+
+- Ensure that "Show media change popup:" is set to "Never".
+  - This ensures that the notification window above the system try will not display when a new sound is played by the script.
+
+![Screenshot of "Show media change popup:"](/readmescreenshots/showmediachange.png)
 
 # running the bot after registering it (perform every time you want to use it)
 
 To use the bot, you must perform these steps every time you want it to read chat on stream.
 
 - Open VLC Player, ensure that your streaming software targets VLC.exe as an audio source.
+
 - Open the `Start-TwitchSoundChat.ps1` script, and copy line 8, skipping the `#` symbol. It will look something like this with your replaced Client ID already entered into it.
   - `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&redirect_uri=http://localhost&scope=chat%3Aread`
+
 - Open the same browser you use to log into Twitch, and paste the link there and go to that address.
+
 - You should see an authorization request, from your own bot with the permissions to "View live Stream Chat and Room messages". Click "Authorize". **(Once you perform this step, it will be skipped in future login attempts).**
-- You'll see a "Redirecting" message but eventually you land at a page that seems to be broken:
-- Despite this, we're looking for a code that now appears in the URL of the broken page:
+
+![Screenshot of authorizing bot](/readmescreenshots/authorizebot.png)
+
+- You'll see a "Redirecting" message but eventually you land at a page that seems to be broken. Despite this, we're looking for a code that now appears in the URL of the broken page:
+
+![Screenshot of localhost with code](/readmescreenshots/localhostcode.png)
+
 - Copy the code and paste it in the following line 23 of the `Start-TwitchSoundChat.ps1` script. Replace the zzz's with the Access Code:
   - `$accesscode = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"`
 - Open the folder where the script and files are located, and hold `SHIFT` and right-click on open whitespace. This will bring up a special context menu where `Open PowerShell window here` is an option, select it. This will open up a PowerShell window in this current directory.
+
+![Screenshot of Shift+Right Click](/readmescreenshots/shiftrightclick.png)
+
 - Run the `Start-TwitchSoundChat.ps1` script using the following syntax:
   - `.\Start-TwitchSoundChat.ps1`
+
 - You should now be connected to Twitch chat and sounds should play from VLC player if the trigger word/phrase is read and the conditions are met.
 
 # sounds.csv and twitchusers.ps1
